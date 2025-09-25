@@ -4,12 +4,15 @@ import com.spring.QuizApp.DAO.QuestionDao;
 import com.spring.QuizApp.DAO.quizDao;
 import com.spring.QuizApp.Modals.Question;
 import com.spring.QuizApp.Modals.Quiz;
+import com.spring.QuizApp.Modals.questionWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class quizService {
@@ -29,5 +32,19 @@ public class quizService {
         QuizDao.save(quiz);
 
         return new ResponseEntity<>("Success", HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<List<questionWrapper>> getQuizQuestions(int id) {
+        Optional<Quiz> quiz=QuizDao.findById(id);
+        List<Question> quiestions=quiz.get().getQuiz_questions();
+        List<questionWrapper> questionForUser=new ArrayList<>();
+
+        int questionNumber=1;//We will not reflect the DB serial number
+        for(Question question:quiestions){
+            questionWrapper qw=new questionWrapper(questionNumber, question.getQuestion(), question.getOption_a(), question.getOption_b(), question.getOption_c(), question.getOption_d());
+            questionForUser.add(qw);
+            questionNumber++;
+        }
+        return new ResponseEntity<>(questionForUser,HttpStatus.OK);
     }
 }
