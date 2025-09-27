@@ -37,4 +37,14 @@ public class quizController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @PostMapping("getScore/{id}")
+    public ResponseEntity<Integer> getScore(@PathVariable int id,@RequestBody List<Response> resp){
+        try {
+            return quizService.getScore(id,resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
