@@ -47,4 +47,20 @@ public class quizService {
         }
         return new ResponseEntity<>(questionForUser,HttpStatus.OK);
     }
+
+    public ResponseEntity<Integer> getScore(int id, List<Response> resp){
+        Quiz quiz=QuizDao.findById(id).get();
+        List<Question> questions=quiz.getQuiz_questions();
+
+        int i=0;
+        int result=0;
+
+        for(Response resp1:resp){
+            if(resp1.getResponse().equals(questions.get(i).getCorrect_answer())){
+                result++;
+            }
+            i++;
+        }
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
 }
